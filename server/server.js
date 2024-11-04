@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import User from './Schema/User.js';
+import Image from './Schema/Image.js';
 import { nanoid } from 'nanoid';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -118,13 +119,26 @@ app.post("/signin", (req, res) => {
                 if (!result) {
                     return res.status(403).json({ "error": "Incorrect password" });
                 }
-
                 return res.status(200).json(formatted_data(user));
             });
         })
         .catch((err) => {
             return res.status(500).json({ "error": err.message });
         });
+});
+
+
+// Endpoint to upload the image
+app.post("/upload", async (req, res) => {
+  const { image } = req.body;
+
+  try {
+    const newImage = new Image({ image });
+    await newImage.save();
+    res.status(201).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error saving image" });
+  }
 });
 
 app.listen(port, () => console.log(`App running on port ${port}`));

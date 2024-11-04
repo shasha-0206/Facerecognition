@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import axios from 'axios';
 
-const UserAuth = ({ type }) => {
-    const navigate = useNavigate(); // Move useNavigate to the top of the component
+const UserAuth = ({ type}) => {
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,10 +36,19 @@ const UserAuth = ({ type }) => {
             const response = await axios.post(backendURL, { fullname, email, password });
             toast.success("Success! Redirecting...");
 
-            // Delay redirection by 2 seconds
-            setTimeout(() => {
-                navigate("/"); // Use navigate here to redirect
-            }, 2000);
+            // If sign-in is successful, update login state
+            if (type === "sign-in") {
+
+                setTimeout(() => {
+                navigate("/");
+            }, 2000)
+
+            }else{
+                setTimeout(() => {
+                    navigate("/CaptureImage");
+                }, 2000)
+
+            }
             
         } catch (error) {
             // Handle errors from the backend
